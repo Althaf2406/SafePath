@@ -1,0 +1,31 @@
+name: iOS build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build and Test SafePath iOS App
+    # Menggunakan macos-14 (Apple Silicon) agar mendukung Xcode versi baru
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          # Versi Xcode 15.4 (mendukung format proyek 77)
+          xcode-version: '15.4'
+
+      - name: Build Application
+        run: |
+          xcodebuild -project SafePath.xcodeproj \
+                     -scheme SafePath \
+                     -sdk iphonesimulator \
+                     -destination "platform=iOS Simulator,name=iPhone 15,OS=17.5" \
+                     clean build
