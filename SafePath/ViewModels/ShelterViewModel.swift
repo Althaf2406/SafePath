@@ -7,11 +7,13 @@ final class ShelterViewModel: ObservableObject {
     
     @Published var shelters: [Shelter] = []
     @Published var nearbyShelters: [Shelter] = []
+    @Published var recommendedShelters: [Shelter] = []
     @Published var selectedShelter: Shelter?
     @Published var shelterDetail: Shelter?
     @Published var state: ViewState<[Shelter]> = .idle
     @Published var searchText: String = ""
     @Published var activeFilter: ShelterFilter = .nearest
+    @Published var activeDisasterType: String = ""
     
     private let repository: ShelterRepository
     
@@ -29,11 +31,11 @@ final class ShelterViewModel: ObservableObject {
     
     enum ShelterFilter: String, CaseIterable {
         case nearest     = "Nearest"
+        case recommended = "Recommended"
         case available   = "Available"
         case medical     = "Medical"
         case highGround  = "High Ground"
         case petFriendly = "Pet Friendly"
-        case hasCharging = "Has Charging"
     }
     
     // MARK: - Fetch
@@ -57,15 +59,25 @@ final class ShelterViewModel: ObservableObject {
                 radiusKm: radiusKm
             )
             nearbyShelters = data
-            if case .idle = state {} else {
-                // Also update main list if already loaded
-            }
         } catch {
             print("Failed to fetch nearby shelters: \(error.localizedDescription)")
         }
     }
     
-    func fetchShelterDetail(id: String) async {
+    func fetchRecommendedShelters(location: CLLocationCoordinate2D, disasterType: String) async {
+        do {
+            let data = try await repository.fetchRecommendedShelters(
+                lat: location.latitude,
+                lng: location.longitude,
+                disasterType: disasterType
+            )
+            recommendedShelters = data
+        } catch {
+            print("Failed to fetch recommended shelters: \(error.localizedDescription)")
+        }
+    }
+    
+    func fetchShelterDetail(id: Int) async {
         do {
             shelterDetail = try await repository.fetchShelter(id: id)
         } catch {
@@ -90,18 +102,24 @@ final class ShelterViewModel: ObservableObject {
         switch activeFilter {
         case .nearest:
             result.sort { ($0.distanceKm ?? 999) < ($1.distanceKm ?? 999) }
+        case .recommended:
+            if !recommendedShelters.isEmpty {
+                result = recommendedShelters
+            } else {
+                result.sort { ($0.distanceKm ?? 999) < ($1.distanceKm ?? 999) }
+            }
         case .available:
-            result = result.filter { $0.status.isAccepting }
+            result = result.filter { $0.isActive }
         case .medical:
-            result = result.filter { $0.facilities.contains("medical") }
+            result = result.filter { s in
+                s.facilities.contains { f in f.localizedCaseInsensitiveContains("Medis") || f.localizedCaseInsensitiveContains("medical") }
+            }
         case .highGround:
-            // Placeholder — would require elevation data
-            break
+            result = result.filter { $0.buildingLevel >= 3 }
         case .petFriendly:
-            // Placeholder — would require pet_friendly facility flag
-            break
-        case .hasCharging:
-            result = result.filter { $0.facilities.contains("charging") }
+            result = result.filter { s in
+                s.facilities.contains { f in f.localizedCaseInsensitiveContains("pet") || f.localizedCaseInsensitiveContains("hewan") }
+            }
         }
         
         return result
@@ -115,16 +133,19 @@ final class ShelterViewModel: ObservableObject {
     
     // MARK: - Find Nearest Available Shelter
     
-    /// Finds the nearest shelter that is accepting evacuees, preferring medical facilities during emergencies.
+    /// Finds the nearest shelter that is active.
     func findNearestAvailable(preferMedical: Bool = false) -> Shelter? {
         let candidates = (nearbyShelters.isEmpty ? shelters : nearbyShelters)
-            .filter { $0.status.isAccepting }
+            .filter { $0.isActive }
             .sorted { ($0.distanceKm ?? 999) < ($1.distanceKm ?? 999) }
         
-        if preferMedical, let medical = candidates.first(where: { $0.facilities.contains("medical") }) {
+        if preferMedical, let medical = candidates.first(where: { s in
+            s.facilities.contains { f in f.localizedCaseInsensitiveContains("Medis") || f.localizedCaseInsensitiveContains("medical") }
+        }) {
             return medical
         }
         
         return candidates.first
     }
 }
+

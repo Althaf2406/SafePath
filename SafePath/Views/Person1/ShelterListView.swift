@@ -185,32 +185,24 @@ struct ShelterCard: View {
                 
                 Spacer()
                 
-                StatusChip(status: shelter.status)
+                Text(shelter.shelterType.displayName)
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(shelter.isOpenArea ? SafePathColors.warningOrange : SafePathColors.accentBlue)
+                    .cornerRadius(8)
             }
             
-            // Capacity bar
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text("Capacity")
-                        .font(SafePathFonts.caption)
-                        .foregroundColor(SafePathColors.textSecondary)
-                    Spacer()
-                    Text("\(shelter.availableSpace) spots left")
-                        .font(SafePathFonts.caption)
-                        .foregroundColor(capacityColor)
-                }
-                
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.gray.opacity(0.15))
-                            .frame(height: 6)
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(capacityColor)
-                            .frame(width: geo.size.width * min(shelter.capacityPercentage / 100, 1.0), height: 6)
-                    }
-                }
-                .frame(height: 6)
+            // Details bar
+            HStack {
+                Text("Capacity: \(shelter.capacity) people")
+                    .font(SafePathFonts.caption)
+                    .foregroundColor(SafePathColors.textSecondary)
+                Spacer()
+                Text("Lv. \(shelter.buildingLevel)")
+                    .font(SafePathFonts.caption)
+                    .foregroundColor(SafePathColors.textSecondary)
             }
             
             // Facilities
@@ -229,7 +221,7 @@ struct ShelterCard: View {
             
             // Buttons
             HStack(spacing: 8) {
-                NavigationLink(destination: EmptyView()) {
+                NavigationLink(destination: ShelterDetailView(shelter: shelter, viewModel: viewModel())) {
                     Text("View Detail")
                         .font(SafePathFonts.caption)
                         .foregroundColor(SafePathColors.accentBlue)
@@ -254,38 +246,15 @@ struct ShelterCard: View {
         .safePathCard()
     }
     
-    private var capacityColor: Color {
-        if shelter.capacityPercentage >= 90 { return SafePathColors.dangerRed }
-        if shelter.capacityPercentage >= 70 { return SafePathColors.warningOrange }
-        return SafePathColors.safeGreen
+    // Quick ViewModel instantiation for detail preview binding
+    private func viewModel() -> ShelterViewModel {
+        ShelterViewModel()
     }
 }
 
-// MARK: - Status Chip
 
-struct StatusChip: View {
-    let status: ShelterStatus
-    
-    var body: some View {
-        Text(status.displayName)
-            .font(.system(size: 11, weight: .semibold, design: .rounded))
-            .foregroundColor(.white)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(chipColor)
-            .cornerRadius(10)
-    }
-    
-    private var chipColor: Color {
-        switch status {
-        case .available:  return SafePathColors.safeGreen
-        case .almostFull: return SafePathColors.warningOrange
-        case .full:       return SafePathColors.dangerRed
-        case .closed:     return SafePathColors.offlineGray
-        case .unsafe:     return SafePathColors.dangerRed
-        }
-    }
-}
+// StatusChip removed to align with updated schema.
+
 
 // MARK: - Preview
 

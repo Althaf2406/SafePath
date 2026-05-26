@@ -1,27 +1,36 @@
 import Foundation
 
-/// Placeholder for Person 3's offline local storage service.
-/// Person 3 will implement persistent storage for offline shelter, route, and alert data.
+/// Handles offline JSON local caching using UserDefaults.
 final class LocalStorageService {
     
     static let shared = LocalStorageService()
+    private let defaults = UserDefaults.standard
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
+    
     private init() {}
     
-    // TODO: Person 3 — Implement UserDefaults / FileManager / Core Data storage for offline data.
-    // TODO: Person 3 — Save shelter list for offline access.
-    // TODO: Person 3 — Save route data for offline navigation.
-    // TODO: Person 3 — Save disaster alert data for offline viewing.
-    
     func save<T: Encodable>(_ object: T, forKey key: String) {
-        // TODO: Person 3 will implement
+        do {
+            let data = try encoder.encode(object)
+            defaults.set(data, forKey: key)
+        } catch {
+            print("Offline Cache Error (save): \(error.localizedDescription)")
+        }
     }
     
     func load<T: Decodable>(forKey key: String) -> T? {
-        // TODO: Person 3 will implement
-        return nil
+        guard let data = defaults.data(forKey: key) else { return nil }
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            print("Offline Cache Error (load): \(error.localizedDescription)")
+            return nil
+        }
     }
     
     func remove(forKey key: String) {
-        // TODO: Person 3 will implement
+        defaults.removeObject(forKey: key)
     }
 }
+

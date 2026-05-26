@@ -156,15 +156,15 @@ struct EvacuationMapView: UIViewRepresentable {
             if annotation.isSelected {
                 view.markerTintColor = UIColor(SafePathColors.accentBlue)
             } else {
-                switch annotation.shelter.status {
-                case .available:
-                    view.markerTintColor = UIColor(SafePathColors.safeGreen)
-                case .almostFull:
+                if annotation.shelter.isOpenArea {
                     view.markerTintColor = UIColor(SafePathColors.warningOrange)
-                case .full, .closed, .unsafe:
-                    view.markerTintColor = UIColor(SafePathColors.dangerRed)
+                } else if annotation.shelter.shelterType == .verticalShelter {
+                    view.markerTintColor = UIColor(SafePathColors.primaryBlue)
+                } else {
+                    view.markerTintColor = UIColor(SafePathColors.safeGreen)
                 }
             }
+
             
             let btn = UIButton(type: .detailDisclosure)
             view.rightCalloutAccessoryView = btn
@@ -203,8 +203,9 @@ final class ShelterAnnotation: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D { shelter.coordinate }
     var title: String? { shelter.name }
     var subtitle: String? {
-        "\(shelter.status.displayName) • \(shelter.availableSpace) spots"
+        "Capacity: \(shelter.capacity) • Lv. \(shelter.buildingLevel)"
     }
+
     
     init(shelter: Shelter, isSelected: Bool) {
         self.shelter = shelter

@@ -6,9 +6,10 @@ enum APIEndpoint {
     case nearbyAlerts(lat: Double, lng: Double, radiusKm: Double)
     case weatherAlert(adm4: String)
     case shelters
-    case shelterDetail(id: String)
+    case shelterDetail(id: Int)
     case nearbyShelters(lat: Double, lng: Double, radiusKm: Double)
-    case updateShelterStatus(id: String)
+    case recommendedShelters(lat: Double, lng: Double, disasterType: String)
+    case evacuationRoute(originLat: Double, originLng: Double, destLat: Double, destLng: Double)
     
     var path: String {
         switch self {
@@ -24,18 +25,15 @@ enum APIEndpoint {
             return "/shelters/\(id)"
         case .nearbyShelters(let lat, let lng, let radiusKm):
             return "/shelters/nearby?lat=\(lat)&lng=\(lng)&radiusKm=\(radiusKm)"
-        case .updateShelterStatus(let id):
-            return "/shelters/\(id)/status"
+        case .recommendedShelters(let lat, let lng, let disasterType):
+            return "/shelters/recommended?lat=\(lat)&lng=\(lng)&disasterType=\(disasterType)"
+        case .evacuationRoute(let originLat, let originLng, let destLat, let destLng):
+            return "/evacuation-route?originLat=\(originLat)&originLng=\(originLng)&destLat=\(destLat)&destLng=\(destLng)"
         }
     }
     
     var method: String {
-        switch self {
-        case .updateShelterStatus:
-            return "PATCH"
-        default:
-            return "GET"
-        }
+        return "GET"
     }
     
     /// Full URL combining base URL and path.
@@ -43,3 +41,4 @@ enum APIEndpoint {
         URL(string: AppConstants.apiBaseURL + path)
     }
 }
+

@@ -77,7 +77,7 @@ struct MapBottomSheetView: View {
                 Divider().frame(height: 40)
                 routeMetric(value: "\(Int(route.safetyScore * 100))%", label: "Safety", icon: "shield.fill")
                 Divider().frame(height: 40)
-                routeMetric(value: "\(shelter.availableSpace)", label: "Spots", icon: "person.3.fill")
+                routeMetric(value: "\(shelter.capacity)", label: "Cap", icon: "person.3.fill")
             }
             .padding(.vertical, 8)
             .background(SafePathColors.backgroundLight)
@@ -90,11 +90,9 @@ struct MapBottomSheetView: View {
                     .font(SafePathFonts.caption)
                     .foregroundColor(SafePathColors.safeGreen)
                 Spacer()
-                if let lastUpdated = shelter.lastUpdated, let date = lastUpdated.iso8601Date {
-                    Text("Updated \(date.relativeDisplay)")
-                        .font(.system(size: 11))
-                        .foregroundColor(SafePathColors.textSecondary)
-                }
+                Text("Level \(shelter.buildingLevel)")
+                    .font(.system(size: 11))
+                    .foregroundColor(SafePathColors.textSecondary)
             }
             
             // Facilities
@@ -180,11 +178,17 @@ struct MapBottomSheetView: View {
                     }
                 }
                 Spacer()
-                StatusChip(status: shelter.status)
+                Text(shelter.shelterType.displayName)
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(shelter.isOpenArea ? SafePathColors.warningOrange : SafePathColors.accentBlue)
+                    .cornerRadius(8)
             }
             
             HStack {
-                Text("\(shelter.availableSpace) spots available")
+                Text("Capacity: \(shelter.capacity) people")
                     .font(SafePathFonts.caption)
                     .foregroundColor(SafePathColors.textSecondary)
                 Spacer()
@@ -222,6 +226,7 @@ struct MapBottomSheetView: View {
                         .cornerRadius(10)
                 }
             }
+
             
             HStack(spacing: 8) {
                 // Person 3 placeholder

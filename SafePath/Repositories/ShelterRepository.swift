@@ -15,7 +15,7 @@ final class ShelterRepository {
     }
     
     /// Fetch a single shelter by ID.
-    func fetchShelter(id: String) async throws -> Shelter {
+    func fetchShelter(id: Int) async throws -> Shelter {
         return try await api.fetchData(.shelterDetail(id: id))
     }
     
@@ -23,4 +23,10 @@ final class ShelterRepository {
     func fetchNearbyShelters(lat: Double, lng: Double, radiusKm: Double = AppConstants.defaultRadiusKm) async throws -> [Shelter] {
         return try await api.fetchData(.nearbyShelters(lat: lat, lng: lng, radiusKm: radiusKm))
     }
+    
+    /// Fetch recommended shelters based on location and disaster type.
+    func fetchRecommendedShelters(lat: Double, lng: Double, disasterType: String) async throws -> [Shelter] {
+        return try await api.fetchData(.recommendedShelters(lat: lat, lng: lng, disasterType: disasterType))
+    }
 }
+

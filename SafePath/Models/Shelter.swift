@@ -25,100 +25,108 @@ enum ShelterStatus: String, Codable, CaseIterable {
     }
 }
 
+/// Shelter type enum
+enum ShelterType: String, Codable {
+    case building = "building"
+    case openArea = "open_area"
+    case verticalShelter = "vertical_shelter"
+    
+    var displayName: String {
+        switch self {
+        case .building: return "Indoor Building"
+        case .openArea: return "Open Area field"
+        case .verticalShelter: return "Vertical Shelter"
+        }
+    }
+}
+
 /// A shelter/evacuation point fetched from the SafePath backend (PostgreSQL).
 struct Shelter: Codable, Identifiable {
-    let id: String
+    let id: Int
     let name: String
     let address: String
     let latitude: Double
     let longitude: Double
-    let capacityTotal: Int
-    let capacityUsed: Int
-    let availableSpace: Int
-    let status: ShelterStatus
+    let capacity: Int
     let facilities: [String]
-    let contactPhone: String?
-    let source: String?
-    let isVerified: Bool
-    let lastUpdated: String?
+    let shelterType: ShelterType
+    let disasterTypeSupported: [String]
+    let isOpenArea: Bool
+    let buildingLevel: Int
+    let isActive: Bool
     
-    // Populated by nearby endpoint or client-side calculation
+    // Populated by nearby/recommendation endpoint or client-side calculation
     var distanceKm: Double?
+    var recommendationScore: Int?
     
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    var capacityPercentage: Double {
-        guard capacityTotal > 0 else { return 0 }
-        return Double(capacityUsed) / Double(capacityTotal) * 100
-    }
-    
     /// Returns a human-readable facility name from the facility key.
     static func facilityDisplayName(_ key: String) -> String {
-        switch key {
-        case "water":         return "Water"
-        case "food":          return "Food"
-        case "medical":       return "Medical"
-        case "toilet":        return "Toilet"
-        case "charging":      return "Charging"
-        case "sleeping_area": return "Sleeping Area"
-        default:              return key.capitalized
+        switch key.lowercased() {
+        case "water", "air bersih": return "Water"
+        case "food", "makanan":     return "Food"
+        case "medical", "medis":    return "Medical"
+        case "toilet":              return "Toilet"
+        case "charging", "listrik": return "Power Charging"
+        case "sleeping_area":       return "Sleeping Area"
+        default:                    return key.capitalized
         }
     }
     
     /// Returns an SF Symbol name for the facility key.
     static func facilityIcon(_ key: String) -> String {
-        switch key {
-        case "water":         return "drop.fill"
-        case "food":          return "fork.knife"
-        case "medical":       return "cross.case.fill"
-        case "toilet":        return "toilet.fill"
-        case "charging":      return "bolt.fill"
-        case "sleeping_area": return "bed.double.fill"
-        default:              return "building.2.fill"
+        switch key.lowercased() {
+        case "water", "air bersih": return "drop.fill"
+        case "food", "makanan":     return "fork.knife"
+        case "medical", "medis":    return "cross.case.fill"
+        case "toilet":              return "toilet.fill"
+        case "charging", "listrik": return "bolt.fill"
+        case "sleeping_area":       return "bed.double.fill"
+        default:                    return "building.2.fill"
         }
     }
 }
+
 
 // MARK: - Preview / Test Fixture
 
 #if DEBUG
 extension Shelter {
     static let preview = Shelter(
-        id: "preview-shelter-1",
+        id: 1,
         name: "GOR Bung Tomo Surabaya",
         address: "Jl. Joyoboyo No.1, Sawunggaling, Wonokromo, Surabaya",
         latitude: -7.3071,
         longitude: 112.7358,
-        capacityTotal: 2000,
-        capacityUsed: 120,
-        availableSpace: 1880,
-        status: .available,
+        capacity: 1200,
         facilities: ["water", "food", "toilet", "sleeping_area"],
-        contactPhone: "031-5678901",
-        source: "Pemerintah Kota Surabaya",
-        isVerified: true,
-        lastUpdated: "2024-12-01T10:00:00.000Z",
-        distanceKm: 1.8
+        shelterType: .openArea,
+        disasterTypeSupported: ["earthquake"],
+        isOpenArea: true,
+        buildingLevel: 1,
+        isActive: true,
+        distanceKm: 1.8,
+        recommendationScore: 0
     )
     
     static let previewAlmostFull = Shelter(
-        id: "preview-shelter-2",
+        id: 2,
         name: "Balai Pemuda Surabaya",
         address: "Jl. Gubernur Suryo No.15, Genteng, Surabaya",
         latitude: -7.2619,
         longitude: 112.7487,
-        capacityTotal: 300,
-        capacityUsed: 280,
-        availableSpace: 20,
-        status: .almostFull,
+        capacity: 500,
         facilities: ["water", "toilet", "charging"],
-        contactPhone: "031-5347898",
-        source: "Pemerintah Kota Surabaya",
-        isVerified: true,
-        lastUpdated: "2024-12-01T10:00:00.000Z",
-        distanceKm: 3.2
+        shelterType: .building,
+        disasterTypeSupported: ["flood"],
+        isOpenArea: false,
+        buildingLevel: 2,
+        isActive: true,
+        distanceKm: 3.2,
+        recommendationScore: 0
     )
     
     static let previewList: [Shelter] = [preview, previewAlmostFull]

@@ -73,7 +73,13 @@ struct ShelterDetailView: View {
                     .font(SafePathFonts.title)
                     .foregroundColor(SafePathColors.textPrimary)
                 Spacer()
-                StatusChip(status: shelter.status)
+                Text(shelter.shelterType.displayName)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(shelter.isOpenArea ? SafePathColors.warningOrange : SafePathColors.accentBlue)
+                    .cornerRadius(10)
             }
             
             Label(shelter.address, systemImage: "mappin.circle.fill")
@@ -83,20 +89,18 @@ struct ShelterDetailView: View {
             HStack(spacing: 16) {
                 if let dist = shelter.distanceKm {
                     Label(dist.distanceDisplay, systemImage: "location.fill")
-                        .font(SafePathFonts.caption)
-                        .foregroundColor(SafePathColors.accentBlue)
+                         .font(SafePathFonts.caption)
+                         .foregroundColor(SafePathColors.accentBlue)
                 }
                 
-                if shelter.isVerified {
-                    Label("Verified", systemImage: "checkmark.seal.fill")
+                Label("Level \(shelter.buildingLevel)", systemImage: "building.fill")
+                    .font(SafePathFonts.caption)
+                    .foregroundColor(SafePathColors.textSecondary)
+                
+                if shelter.isOpenArea {
+                    Label("Open Area Field", systemImage: "leaf.fill")
                         .font(SafePathFonts.caption)
                         .foregroundColor(SafePathColors.safeGreen)
-                }
-                
-                if let source = shelter.source {
-                    Label(source, systemImage: "building.columns.fill")
-                        .font(SafePathFonts.caption)
-                        .foregroundColor(SafePathColors.textSecondary)
                 }
             }
         }
@@ -112,32 +116,22 @@ struct ShelterDetailView: View {
                 .font(SafePathFonts.headline)
                 .foregroundColor(SafePathColors.textPrimary)
             
-            HStack(spacing: 20) {
-                capacityStat(value: "\(shelter.capacityTotal)", label: "Total")
-                capacityStat(value: "\(shelter.capacityUsed)", label: "Used")
-                capacityStat(value: "\(shelter.availableSpace)", label: "Available", highlight: true)
-            }
-            
-            // Progress bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.gray.opacity(0.15))
-                        .frame(height: 10)
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(capacityColor)
-                        .frame(width: geo.size.width * min(shelter.capacityPercentage / 100, 1.0), height: 10)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(shelter.capacity)")
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .foregroundColor(SafePathColors.accentBlue)
+                    Text("Total Estimated Spots")
+                        .font(SafePathFonts.caption)
+                        .foregroundColor(SafePathColors.textSecondary)
                 }
+                Spacer()
             }
-            .frame(height: 10)
-            
-            Text("\(Int(shelter.capacityPercentage))% occupied")
-                .font(SafePathFonts.caption)
-                .foregroundColor(SafePathColors.textSecondary)
         }
         .padding(16)
         .safePathCard()
     }
+
     
     private func capacityStat(value: String, label: String, highlight: Bool = false) -> some View {
         VStack(spacing: 2) {
@@ -188,21 +182,13 @@ struct ShelterDetailView: View {
     
     private var contactSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Emergency Contact")
+            Text("Emergency Information")
                 .font(SafePathFonts.headline)
                 .foregroundColor(SafePathColors.textPrimary)
             
-            if let phone = shelter.contactPhone {
-                Label(phone, systemImage: "phone.fill")
-                    .font(SafePathFonts.body)
-                    .foregroundColor(SafePathColors.accentBlue)
-            }
-            
-            if let lastUpdated = shelter.lastUpdated, let date = lastUpdated.iso8601Date {
-                Label("Last updated: \(date.shortDisplay)", systemImage: "clock.fill")
-                    .font(SafePathFonts.caption)
-                    .foregroundColor(SafePathColors.textSecondary)
-            }
+            Label("Compatible disasters: \(shelter.disasterTypeSupported.map { $0.capitalized }.joined(separator: \", \"))", systemImage: "info.circle.fill")
+                .font(SafePathFonts.body)
+                .foregroundColor(SafePathColors.textPrimary)
         }
         .padding(16)
         .safePathCard()
@@ -259,14 +245,6 @@ struct ShelterDetailView: View {
             }
         }
     }
-    
-    // MARK: - Helpers
-    
-    private var capacityColor: Color {
-        if shelter.capacityPercentage >= 90 { return SafePathColors.dangerRed }
-        if shelter.capacityPercentage >= 70 { return SafePathColors.warningOrange }
-        return SafePathColors.safeGreen
-    }
 }
 
 // MARK: - Preview
@@ -280,3 +258,4 @@ struct ShelterDetailView_Previews: PreviewProvider {
     }
 }
 #endif
+
