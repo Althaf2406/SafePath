@@ -17,6 +17,11 @@ final class LocationService: NSObject, ObservableObject, CLLocationManagerDelega
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.distanceFilter = 50 // Update every 50m
+        
+        #if targetEnvironment(simulator)
+        // Default to Surabaya coordinates for simulator/testing
+        self.currentLocation = CLLocationCoordinate2D(latitude: -7.2619, longitude: 112.7487)
+        #endif
     }
     
     // MARK: - Public API

@@ -22,8 +22,12 @@ final class EvacuationRouteViewModel: ObservableObject {
     // MARK: - Integration hooks for Person 3
     var onSaveRouteOffline: ((EvacuationRoute) -> Void)?
     
-    init(routeRepository: RouteRepository = RouteRepository()) {
+    init(routeRepository: RouteRepository) {
         self.routeRepository = routeRepository
+    }
+    
+    convenience init() {
+        self.init(routeRepository: RouteRepository())
     }
     
     // MARK: - Route Calculation

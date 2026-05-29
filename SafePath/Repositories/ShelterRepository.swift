@@ -21,7 +21,11 @@ final class ShelterRepository {
     }
     
     /// Fetch nearby shelters within radius.
-    func fetchNearbyShelters(lat: Double, lng: Double, radiusKm: Double = AppConstants.defaultRadiusKm) async throws -> [Shelter] {
+    func fetchNearbyShelters(lat: Double, lng: Double) async throws -> [Shelter] {
+        return try await fetchNearbyShelters(lat: lat, lng: lng, radiusKm: AppConstants.defaultRadiusKm)
+    }
+    
+    func fetchNearbyShelters(lat: Double, lng: Double, radiusKm: Double) async throws -> [Shelter] {
         return try await api.fetchData(.nearbyShelters(lat: lat, lng: lng, radiusKm: radiusKm))
     }
     

@@ -15,6 +15,7 @@ struct MainMapView: View {
     @State private var showShelterList = false
     @State private var showShelterDetail = false
     @State private var navigateToShelterDetail: Shelter?
+    @State private var centerUserTrigger = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -27,6 +28,7 @@ struct MainMapView: View {
                 primaryRoute: routeVM.currentRoute?.mkRoute,
                 alternativeRoutes: routeVM.alternativeRoutes.compactMap(\.mkRoute),
                 isEmergencyMode: isEmergencyMode,
+                centerUserTrigger: centerUserTrigger,
                 onShelterTapped: { shelter in
                     shelterVM.selectShelter(shelter)
                     showBottomSheet = true
@@ -112,6 +114,7 @@ struct MainMapView: View {
                     // My location
                     floatingButton(icon: "location.fill", label: "Location") {
                         locationService.startUpdating()
+                        centerUserTrigger.toggle()
                     }
                     
                     // Toggle bottom sheet

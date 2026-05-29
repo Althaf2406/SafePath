@@ -13,6 +13,7 @@ struct EvacuationMapView: UIViewRepresentable {
     let primaryRoute: MKRoute?
     let alternativeRoutes: [MKRoute]
     let isEmergencyMode: Bool
+    let centerUserTrigger: Bool
     
     var onShelterTapped: ((Shelter) -> Void)?
     
@@ -69,6 +70,30 @@ struct EvacuationMapView: UIViewRepresentable {
         
         // Fit map to show content
         adjustRegion(mapView)
+        
+        // Handle centering trigger when Location button is tapped
+        if centerUserTrigger != context.coordinator.lastCenterUserTrigger {
+            context.coordinator.lastCenterUserTrigger = centerUserTrigger
+            if let userCoord = userCoordinate {
+                let region = MKCoordinateRegion(
+                    center: userCoord,
+                    span: MKCoordinateSpan(
+                        latitudeDelta: AppConstants.defaultMapSpanDelta,
+                        longitudeDelta: AppConstants.defaultMapSpanDelta
+                    )
+                )
+                mapView.setRegion(region, animated: true)
+            } else if let userLoc = mapView.userLocation.location {
+                let region = MKCoordinateRegion(
+                    center: userLoc.coordinate,
+                    span: MKCoordinateSpan(
+                        latitudeDelta: AppConstants.defaultMapSpanDelta,
+                        longitudeDelta: AppConstants.defaultMapSpanDelta
+                    )
+                )
+                mapView.setRegion(region, animated: true)
+            }
+        }
     }
     
     func makeCoordinator() -> Coordinator {
@@ -82,7 +107,7 @@ struct EvacuationMapView: UIViewRepresentable {
             let rect = route.polyline.boundingMapRect
             let insets = UIEdgeInsets(top: 80, left: 40, bottom: 200, right: 40)
             mapView.setVisibleMapRect(rect, edgePadding: insets, animated: true)
-        } else if let userCoord = userCoordinate {
+        } else if let userCoord = userCoordinate, selectedShelter == nil && alerts.isEmpty && primaryRoute == nil {
             let region = MKCoordinateRegion(
                 center: userCoord,
                 span: MKCoordinateSpan(
@@ -98,6 +123,7 @@ struct EvacuationMapView: UIViewRepresentable {
     
     final class Coordinator: NSObject, MKMapViewDelegate {
         var parent: EvacuationMapView
+        var lastCenterUserTrigger: Bool?
         
         init(parent: EvacuationMapView) {
             self.parent = parent
@@ -150,21 +176,37 @@ struct EvacuationMapView: UIViewRepresentable {
                 ?? MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
             
             view.annotation = annotation
-            view.glyphImage = UIImage(systemName: "building.2.fill")
             view.displayPriority = .required
             view.canShowCallout = true
             
             if annotation.isSelected {
                 view.markerTintColor = UIColor(SafePathColors.accentBlue)
+                view.glyphImage = UIImage(systemName: "mappin.and.ellipse")
             } else {
-                if annotation.shelter.isOpenArea {
+                let hasMedical = annotation.shelter.facilities.contains(where: {
+                    $0.lowercased().contains("medis") || $0.lowercased().contains("medical")
+                })
+                
+                if hasMedical {
+                    view.markerTintColor = UIColor(SafePathColors.dangerRed)
+                    view.glyphImage = UIImage(systemName: "cross.case.fill")
+                } else if annotation.shelter.isOpenArea {
                     view.markerTintColor = UIColor(SafePathColors.warningOrange)
+                    view.glyphImage = UIImage(systemName: "tent.fill")
                 } else if annotation.shelter.shelterType == .verticalShelter {
                     view.markerTintColor = UIColor(SafePathColors.primaryBlue)
+                    view.glyphImage = UIImage(systemName: "building.2.fill")
                 } else {
                     view.markerTintColor = UIColor(SafePathColors.safeGreen)
+                    view.glyphImage = UIImage(systemName: "house.fill")
                 }
             }
+            
+            let btn = UIButton(type: .detailDisclosure)
+            view.rightCalloutAccessoryView = btn
+            
+            return view
+        }
 
             
             let btn = UIButton(type: .detailDisclosure)
