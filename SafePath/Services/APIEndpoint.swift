@@ -12,6 +12,30 @@ enum APIEndpoint {
     case recommendedShelters(lat: Double, lng: Double, disasterType: String)
     case evacuationRoute(originLat: Double, originLng: Double, destLat: Double, destLng: Double)
     
+    //user
+    case register
+    case login
+    case logout
+    case userProfile
+    case updateProfile
+    
+    //fam
+    case createFamilyGroup
+    case fetchFamilyGroup(groupID: String)
+    case fetchAllFamilyGroups
+    case inviteFamilyMember(groupID: String)
+    case removeFamilyMember(groupID: String, memberID: String)
+    case updateFamilyMemberStatus(groupID: String, memberID: String)
+    case shareLocation
+    case fetchFamilyLocations(groupID: String)
+    
+    //emegrncy
+    case updateEmergencyStatus
+    case fetchEmergencyStatus(userID: String)
+    case fetchFamilyStatuses(groupID: String)
+    case triggerSOS
+    case resolveSOS(sosID: String)
+    
     var path: String {
         switch self {
         case .disasterAlerts:
@@ -30,16 +54,66 @@ enum APIEndpoint {
             return "/shelters/recommended?lat=\(lat)&lng=\(lng)&disasterType=\(disasterType)"
         case .evacuationRoute(let originLat, let originLng, let destLat, let destLng):
             return "/evacuation-route?originLat=\(originLat)&originLng=\(originLng)&destLat=\(destLat)&destLng=\(destLng)"
+            
+        //auth
+        case .register:
+            return "/auth/register"
+        case .login:
+            return "/auth/login"
+        case .logout:
+            return "/auth/logout"
+        case .userProfile, .updateProfile:
+            return "/user/profile"
+            
+        //fam
+        case .createFamilyGroup:
+            return "/family/group"
+        case .fetchFamilyGroup(let groupID):
+            return "/family/group/\(groupID)"
+        case .fetchAllFamilyGroups:
+            return "/family/groups"
+        case .inviteFamilyMember(let groupID):
+            return "/family/group/\(groupID)/invite"
+        case .removeFamilyMember(let groupID, let memberID):
+            return "/family/group/\(groupID)/member/\(memberID)"
+        case .updateFamilyMemberStatus(let groupID, let memberID):
+            return "/family/group/\(groupID)/member/\(memberID)/status"
+        case .shareLocation:
+            return "/family/location"
+        case .fetchFamilyLocations(let groupID):
+            return "/family/group/\(groupID)/locations"
+            
+        //emgrncy
+        case .updateEmergencyStatus:
+            return "/emergency/status"
+        case .fetchEmergencyStatus(let userID):
+            return "/emergency/status/\(userID)"
+        case .fetchFamilyStatuses(let groupID):
+            return "/emergency/family/\(groupID)/statuses"
+        case .triggerSOS:
+            return "/emergency/sos"
+        case .resolveSOS(let sosID):
+            return "/emergency/sos/\(sosID)/resolve"
         }
     }
     
     var method: String {
-        return "GET"
+        switch self {
+        case .register, .login, .logout,
+                .createFamilyGroup, .inviteFamilyMember, .shareLocation,
+                .updateEmergencyStatus, .triggerSOS, .resolveSOS:
+            return "POST"
+        case .updateProfile, .updateFamilyMemberStatus:
+            return "PUT"
+        case .removeFamilyMember:
+            return "DELETE"
+        default:
+            return "GET"
+        }
+        
+        /// Full URL combining base URL and path.
+        var url: URL? {
+            URL(string: AppConstants.apiBaseURL + path)
+        }
     }
     
-    /// Full URL combining base URL and path.
-    var url: URL? {
-        URL(string: AppConstants.apiBaseURL + path)
-    }
-}
-
