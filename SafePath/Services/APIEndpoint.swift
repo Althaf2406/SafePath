@@ -55,7 +55,7 @@ enum APIEndpoint {
         case .evacuationRoute(let originLat, let originLng, let destLat, let destLng):
             return "/evacuation-route?originLat=\(originLat)&originLng=\(originLng)&destLat=\(destLat)&destLng=\(destLng)"
             
-        //auth
+            //auth
         case .register:
             return "/auth/register"
         case .login:
@@ -65,7 +65,7 @@ enum APIEndpoint {
         case .userProfile, .updateProfile:
             return "/user/profile"
             
-        //fam
+            //fam
         case .createFamilyGroup:
             return "/family/group"
         case .fetchFamilyGroup(let groupID):
@@ -83,7 +83,7 @@ enum APIEndpoint {
         case .fetchFamilyLocations(let groupID):
             return "/family/group/\(groupID)/locations"
             
-        //emgrncy
+            //emgrncy
         case .updateEmergencyStatus:
             return "/emergency/status"
         case .fetchEmergencyStatus(let userID):
@@ -110,10 +110,9 @@ enum APIEndpoint {
         default:
             return "GET"
         }
-        
-        /// Full URL combining base URL and path.
-        var url: URL? {
-            URL(string: AppConstants.apiBaseURL + path)
-        }
     }
     
+    var url: URL? {
+        URL(string: AppConstants.apiBaseURL + path)
+    }
+}
