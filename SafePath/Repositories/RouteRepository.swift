@@ -3,6 +3,7 @@ import Combine
 import MapKit
 
 /// Generates real evacuation routes using MapKit MKDirections.
+@MainActor
 final class RouteRepository {
     
     /// Calculate a walking route from origin to a shelter coordinate using MapKit.

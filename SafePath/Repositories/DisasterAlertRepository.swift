@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-/// Fetches disaster alert data from the SafePath Express backend.
+@MainActor
 final class DisasterAlertRepository {
     
     private let api: APIService

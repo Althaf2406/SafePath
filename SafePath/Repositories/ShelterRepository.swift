@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-/// Fetches shelter data from the SafePath Express backend (PostgreSQL-backed).
+@MainActor
 final class ShelterRepository {
     
     private let api: APIService

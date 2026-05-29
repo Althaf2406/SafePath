@@ -207,13 +207,6 @@ struct EvacuationMapView: UIViewRepresentable {
             
             return view
         }
-
-            
-            let btn = UIButton(type: .detailDisclosure)
-            view.rightCalloutAccessoryView = btn
-            
-            return view
-        }
         
         private func alertAnnotationView(for annotation: DisasterAlertAnnotation, in mapView: MKMapView) -> MKAnnotationView {
             let id = "AlertPin"

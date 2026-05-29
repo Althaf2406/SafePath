@@ -106,7 +106,7 @@ struct DisasterAlertDetailView: View {
                 
                 let timeAgo = alert.parsedDate.timeAgoDisplay()
                 let depthString = alert.depth != nil ? " at depth \(alert.depth!)" : ""
-                Text("Magnitude \(String(format: "%.1f", alert.magnitude)) detected. Epicenter is approximately \(alert.distanceKm != nil ? String(format: "%.1f", alert.distanceKm!) : "4.2") km away near \(alert.locationName). Event recorded \(timeAgo).")
+                Text("Magnitude \(String(format: "%.1f", alert.magnitude)) detected\(depthString). Epicenter is approximately \(alert.distanceKm != nil ? String(format: "%.1f", alert.distanceKm!) : "4.2") km away near \(alert.locationName). Event recorded \(timeAgo).")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(SafePathColors.textPrimary)
                     .lineSpacing(4)
