@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Repository for first aid guide content.
 final class FirstAidRepository {

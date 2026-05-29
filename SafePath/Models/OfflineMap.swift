@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Represents an offline map region.
 struct OfflineMap: Codable, Identifiable {

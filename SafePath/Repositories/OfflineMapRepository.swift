@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Repository for offline map data persistence.
 final class OfflineMapRepository {

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Cached data available in offline survival mode.
 struct OfflineSurvivalData: Codable, Identifiable {

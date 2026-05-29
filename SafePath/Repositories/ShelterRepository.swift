@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Fetches shelter data from the SafePath Express backend (PostgreSQL-backed).
 final class ShelterRepository {

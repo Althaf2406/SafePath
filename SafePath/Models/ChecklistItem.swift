@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Priority level for checklist items.
 enum ChecklistPriority: String, Codable, CaseIterable {

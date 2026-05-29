@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Fetches disaster alert data from the SafePath Express backend.
 final class DisasterAlertRepository {

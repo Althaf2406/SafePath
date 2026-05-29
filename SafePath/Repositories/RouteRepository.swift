@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import MapKit
 
 /// Generates real evacuation routes using MapKit MKDirections.
@@ -24,7 +25,7 @@ final class RouteRepository {
         
         return EvacuationRoute(
             id: UUID().uuidString,
-            shelterId: shelter.id,
+            shelterId: String(shelter.id),
             shelterName: shelter.name,
             distanceMeters: primaryRoute.distance,
             expectedTravelTime: primaryRoute.expectedTravelTime,
@@ -53,7 +54,7 @@ final class RouteRepository {
         
         let primary = EvacuationRoute(
             id: UUID().uuidString,
-            shelterId: shelter.id,
+            shelterId: String(shelter.id),
             shelterName: shelter.name,
             distanceMeters: primaryMK.distance,
             expectedTravelTime: primaryMK.expectedTravelTime,
@@ -64,7 +65,7 @@ final class RouteRepository {
         let alternatives = response.routes.dropFirst().map { route in
             EvacuationRoute(
                 id: UUID().uuidString,
-                shelterId: shelter.id,
+                shelterId: String(shelter.id),
                 shelterName: shelter.name,
                 distanceMeters: route.distance,
                 expectedTravelTime: route.expectedTravelTime,

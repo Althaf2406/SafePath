@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 3: First aid guide list and step-by-step display.
 struct FirstAidGuideView: View {

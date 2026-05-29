@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: A disaster-specific checklist template.
 struct DisasterChecklist: Codable, Identifiable {

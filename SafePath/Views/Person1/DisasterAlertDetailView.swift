@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import MapKit
 
 /// Detail screen for a single disaster alert matching the visual style in Screenshot 5.
@@ -57,7 +58,7 @@ struct DisasterAlertDetailView: View {
             }
         }
         .sheet(isPresented: $showShareSheet) {
-            ShareSheet(activityItems: ["SafePath Alert: \(alert.title). \(alert.instruction)"])
+            ShareSheet(activityItems: ["SafePath Alert: \(alert.typeDisplayName) at \(alert.locationName). \(alert.instruction)"])
         }
     }
     

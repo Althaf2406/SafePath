@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 2: Family dashboard showing member statuses and locations.
 struct FamilyDashboardView: View {

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import MapKit
 
 /// Main map screen with Normal (Shelter Map) and Emergency (Evacuation Map) modes.

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 3: Offline survival mode showing cached data when network is unavailable.
 struct OfflineSurvivalView: View {

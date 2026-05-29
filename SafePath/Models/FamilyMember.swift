@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Represents a member in a family group.
 struct FamilyMember: Codable, Identifiable {

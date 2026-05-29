@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 2: User registration screen.
 struct RegisterView: View {

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Disaster alert marker for SwiftUI context.
 struct DisasterAlertMarkerView: View {

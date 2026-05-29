@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Represents a registered SafePath user.
 struct User: Codable, Identifiable {

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Errors raised by the SafePath API layer.
 enum APIError: LocalizedError {

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Repository for preparedness data persistence.
 final class PreparednessRepository {

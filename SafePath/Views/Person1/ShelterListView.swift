@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Displays a scrollable list of shelters with search and filter chips.
 struct ShelterListView: View {

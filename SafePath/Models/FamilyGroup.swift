@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Represents a family group for emergency coordination.
 struct FamilyGroup: Codable, Identifiable {

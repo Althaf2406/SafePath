@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 3: Customize Checklist screen matching the visual style in Screenshot 3.
 struct CustomizeChecklistView: View {

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Color-coded shelter marker for SwiftUI context (non-map usage like lists or previews).
 struct ShelterMarkerView: View {

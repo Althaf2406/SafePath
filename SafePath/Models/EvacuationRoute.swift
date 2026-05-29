@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import MapKit
 
 /// Represents a calculated evacuation route from user location to a shelter.

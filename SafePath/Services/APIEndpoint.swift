@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Defines all SafePath API endpoint paths.
 enum APIEndpoint {

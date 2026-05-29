@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 2: Edit Profile view matching the visual style in Screenshot 4.
 struct ProfileView: View {

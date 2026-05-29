@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import CoreLocation
 
 /// Shelter status indicating availability.
@@ -61,6 +62,14 @@ struct Shelter: Codable, Identifiable {
     
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    var status: ShelterStatus {
+        isActive ? .available : .closed
+    }
+    
+    var availableSpace: Int {
+        capacity
     }
     
     /// Returns a human-readable facility name from the facility key.

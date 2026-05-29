@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Represents emergency status for a user.
 struct EmergencyStatus: Codable, Identifiable {

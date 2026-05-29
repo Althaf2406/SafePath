@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 2: Emergency status display and update screen.
 struct EmergencyStatusView: View {

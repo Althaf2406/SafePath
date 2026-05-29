@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 2: SOS trigger screen with countdown and location sharing.
 struct SOSView: View {

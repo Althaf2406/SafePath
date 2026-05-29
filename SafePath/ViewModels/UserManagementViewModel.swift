@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Manages user registration, login, logout, and profile.
 @MainActor

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Repository for checklist data persistence.
 final class ChecklistRepository {

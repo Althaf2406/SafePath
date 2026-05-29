@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Represents a notification sent to family members.
 struct FamilyNotification: Codable, Identifiable {

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Handles offline JSON local caching using UserDefaults.
 final class LocalStorageService {

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Person 3: Emergency Checklist view matching the visual style in Screenshot 2.
 struct ChecklistView: View {

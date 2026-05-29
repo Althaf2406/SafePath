@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Tab-based navigation for SafePath matching the screenshots.
 struct AppRouter: View {

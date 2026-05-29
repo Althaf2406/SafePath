@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Manages checklist state and persistence.
 @MainActor

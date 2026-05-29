@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Represents a first aid guide topic.
 struct FirstAidGuide: Codable, Identifiable {

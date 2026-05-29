@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Generic wrapper for SafePath API responses: { success, count, data }.
 struct APIResponse<T: Decodable>: Decodable {

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Represents a preparedness reminder.
 struct PreparednessReminder: Codable, Identifiable {

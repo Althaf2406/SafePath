@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Manages offline map downloads and state.
 @MainActor

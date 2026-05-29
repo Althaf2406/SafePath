@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Placeholder for Person 3's cache management.
 /// Person 3 will implement TTL-based caching for offline mode.

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Bottom sheet content that adapts between Normal and Emergency mode.
 struct MapBottomSheetView: View {

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Manages first aid guide data.
 @MainActor

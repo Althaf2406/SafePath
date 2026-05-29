@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 3: Manages offline survival data, cache access, and offline emergency resources.
 @MainActor

@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Repository for emergency status API calls.
 final class EmergencyStatusRepository {

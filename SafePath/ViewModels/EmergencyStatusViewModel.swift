@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /// Person 2: Manages emergency status updates and SOS triggers.
 @MainActor

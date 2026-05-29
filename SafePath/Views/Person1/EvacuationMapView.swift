@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import MapKit
 
 /// UIKit-backed Map view that supports route polyline overlays.
