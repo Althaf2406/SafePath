@@ -186,7 +186,7 @@ struct ShelterDetailView: View {
                 .font(SafePathFonts.headline)
                 .foregroundColor(SafePathColors.textPrimary)
             
-            Label("Compatible disasters: \(shelter.disasterTypeSupported.map { $0.capitalized }.joined(separator: \", \"))", systemImage: "info.circle.fill")
+            Label("Compatible disasters: \(shelter.disasterTypeSupported.map { $0.capitalized }.joined(separator: ", "))", systemImage: "info.circle.fill")
                 .font(SafePathFonts.body)
                 .foregroundColor(SafePathColors.textPrimary)
         }

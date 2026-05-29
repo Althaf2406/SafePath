@@ -29,8 +29,12 @@ final class DisasterAlertViewModel: ObservableObject {
     // MARK: - Integration hooks for Person 3
     var onSaveAlertOffline: ((DisasterAlert) -> Void)?
     
-    init(repository: DisasterAlertRepository = DisasterAlertRepository()) {
+    init(repository: DisasterAlertRepository) {
         self.repository = repository
+    }
+    
+    convenience init() {
+        self.init(repository: DisasterAlertRepository())
     }
     
     // MARK: - Fetch All Alerts
@@ -48,7 +52,11 @@ final class DisasterAlertViewModel: ObservableObject {
     
     // MARK: - Fetch Nearby Alerts
     
-    func fetchNearbyAlerts(location: CLLocationCoordinate2D, radiusKm: Double = AppConstants.alertProximityThresholdKm) async {
+    func fetchNearbyAlerts(location: CLLocationCoordinate2D) async {
+        await fetchNearbyAlerts(location: location, radiusKm: AppConstants.alertProximityThresholdKm)
+    }
+    
+    func fetchNearbyAlerts(location: CLLocationCoordinate2D, radiusKm: Double) async {
         do {
             let alerts = try await repository.fetchNearbyAlerts(
                 lat: location.latitude,

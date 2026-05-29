@@ -23,8 +23,12 @@ final class ShelterViewModel: ObservableObject {
     // MARK: - Integration hooks for Person 3
     var onSaveShelterOffline: ((Shelter) -> Void)?
     
-    init(repository: ShelterRepository = ShelterRepository()) {
+    init(repository: ShelterRepository) {
         self.repository = repository
+    }
+    
+    convenience init() {
+        self.init(repository: ShelterRepository())
     }
     
     // MARK: - Filter Enum
@@ -51,7 +55,11 @@ final class ShelterViewModel: ObservableObject {
         }
     }
     
-    func fetchNearbyShelters(location: CLLocationCoordinate2D, radiusKm: Double = AppConstants.defaultRadiusKm) async {
+    func fetchNearbyShelters(location: CLLocationCoordinate2D) async {
+        await fetchNearbyShelters(location: location, radiusKm: AppConstants.defaultRadiusKm)
+    }
+    
+    func fetchNearbyShelters(location: CLLocationCoordinate2D, radiusKm: Double) async {
         do {
             let data = try await repository.fetchNearbyShelters(
                 lat: location.latitude,
